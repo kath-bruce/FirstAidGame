@@ -8,7 +8,7 @@ public class CompressionBar : MonoBehaviour
     public RectTransform respawnDot;
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -39,5 +39,10 @@ public class CompressionBar : MonoBehaviour
                 compressionDots[i].GetComponent<RectTransform>().position = respawnDot.position;
             }
         }
+    }
+
+    public List<GameObject> GetDots()
+    {
+        return compressionDots;
     }
 }
