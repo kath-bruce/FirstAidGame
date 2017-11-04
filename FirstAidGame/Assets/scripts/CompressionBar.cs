@@ -23,7 +23,7 @@ public class CompressionBar : MonoBehaviour
         for (int i = 0; i < compressionDots.Count; i++)
         {
             Vector3 dotVec = compressionDots[i].transform.position;
-            dotVec.x -= 100.0f * Time.deltaTime;
+            dotVec.x -= 200.0f * Time.deltaTime;
             compressionDots[i].transform.position = dotVec;
 
             Vector3[] dotCorners = new Vector3[4];

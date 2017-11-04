@@ -19,15 +19,27 @@ public class BarCollision : MonoBehaviour
     {
         for (int i = 0; i < dots.Count; i++)
         {
-            Rect barRect = GetComponent<RectTransform>().rect;
+            RectTransform barRectT = GetComponent<RectTransform>();
+            RectTransform dotRectT = dots[i].GetComponent<RectTransform>();
 
-            //if (barRect.Contains() || barRect.Contains(dotCorners[1]) 
-            //    || barRect.Contains(dotCorners[2]) || barRect.Contains(dotCorners[3]))
-            //{
-            //    Debug.Log(dots[i].name + " is colliding with bar");
-            //}
+            Rect barRect = new Rect(
+                barRectT.position.x - (barRectT.rect.width / 2.0f),
+                barRectT.position.y - (barRectT.rect.height / 2.0f),
+                barRectT.rect.width,
+                barRectT.rect.height
+            );
 
-            
+            Rect dotRect = new Rect(
+                dotRectT.position.x - (dotRectT.rect.width / 2.0f), 
+                dotRectT.position.y - (dotRectT.rect.height / 2.0f), 
+                dotRectT.rect.width, 
+                dotRectT.rect.height
+            );
+
+            if (barRect.Overlaps(dotRect) && Input.GetKeyUp(KeyCode.Space))
+            {
+                Debug.Log(dots[i].name + " is colliding with bar");
+            }
         }
     }
 }
