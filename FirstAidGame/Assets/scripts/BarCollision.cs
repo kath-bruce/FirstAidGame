@@ -142,10 +142,10 @@ public class BarCollision : MonoBehaviour
 
             if (compCount == 30)
             {
-                paused = true;
+                //paused = true;
 
-                //pause bar
-                FindObjectOfType<CompressionBar>().PauseBar(true);
+                ////pause bar
+                //FindObjectOfType<CompressionBar>().PauseBar(true);
 
                 //enable indicator
                 breathIndicator.SetActive(true);
