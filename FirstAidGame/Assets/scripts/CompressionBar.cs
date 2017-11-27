@@ -5,24 +5,27 @@ using UnityEngine;
 public class CompressionBar : MonoBehaviour
 {
     List<GameObject> compressionDots = new List<GameObject>();
+    public GameObject compressionDotPrefab;
     public RectTransform respawnDot;
 
     bool barPaused = false;
-
-    // Use this for initialization
-    void Awake()
-    {
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            compressionDots.Add(transform.GetChild(i).gameObject);
-        }
-    }
+    const float timeBetweenDots = 0.6f;
+    float timeLeftBetweenDots = 0.0f;
 
     // Update is called once per frame
     void Update()
     {
         if (!barPaused)
         {
+
+            timeLeftBetweenDots -= Time.deltaTime;
+
+            if (timeLeftBetweenDots <= 0.0f)
+            {
+                compressionDots.Add(Instantiate(compressionDotPrefab, respawnDot.position, respawnDot.transform.rotation, transform));
+                timeLeftBetweenDots = timeBetweenDots;
+            }
+
             for (int i = 0; i < compressionDots.Count; i++)
             {
                 Vector3 dotVec = compressionDots[i].transform.position;
@@ -39,7 +42,15 @@ public class CompressionBar : MonoBehaviour
                     && !screenRect.Contains(dotCorners[2]) && !screenRect.Contains(dotCorners[3])
                     && dotVec.x < 0)
                 {
-                    compressionDots[i].GetComponent<RectTransform>().position = respawnDot.position;
+                    //Debug.LogError("DOT removed");
+
+                    //Vector3 dotPos = compressionDots[i].GetComponent<RectTransform>().position;
+                    //dotPos.x = respawnDot.position.x;
+
+                    //compressionDots[i].GetComponent<RectTransform>().position = dotPos;
+                    Destroy(compressionDots[i]);
+                    compressionDots.RemoveAt(i);
+                    //start countdown
                 }
             }
         }
