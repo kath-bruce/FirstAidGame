@@ -18,6 +18,7 @@ public class BarCollision : MonoBehaviour
 
     //bool paused = false;
     bool countdownStarted = false;
+    bool disableCollision = false;
 
     List<GameObject> dots = new List<GameObject>();
 
@@ -39,7 +40,7 @@ public class BarCollision : MonoBehaviour
             colIndColour.a -= Time.deltaTime;
         //potentially increase the size of the text box?
 
-        if (countdownStarted)
+        if (countdownStarted && timeLeft > 0)
             timeLeft -= Time.deltaTime;
 
         if (timeLeft < 0)
@@ -49,7 +50,7 @@ public class BarCollision : MonoBehaviour
             //paused = true;
 
             //pause bar
-            //FindObjectOfType<CompressionBar>().PauseBar(true);
+            FindObjectOfType<CompressionBar>().PauseBar(true);
 
             //set score
             gameComplete.text = "AMBULANCE HAS ARRIVED Score: " + score;
@@ -88,12 +89,12 @@ public class BarCollision : MonoBehaviour
                 countdownStarted = true;
             }
 
-            if (!barRect.Overlaps(dotRect) && Input.GetKeyDown(KeyCode.Space))
+            if (!barRect.Overlaps(dotRect) && Input.GetKeyDown(KeyCode.Space) && countdownStarted && !disableCollision)
             {
                 //Debug.LogError("missed");
                 misses.Add(true);
             }
-            else if (barRect.Overlaps(dotRect) && Input.GetKeyDown(KeyCode.Space))
+            else if (barRect.Overlaps(dotRect) && Input.GetKeyDown(KeyCode.Space) && countdownStarted && !disableCollision)
             {
                 float percentage = Mathf.Abs(((dotRect.xMin - barRect.xMax) / dotRect.width) * 100.0f);
 
@@ -164,5 +165,10 @@ public class BarCollision : MonoBehaviour
     {
         compCount = 0;
         //paused = false;
+    }
+
+    public void EnableCollision(bool enableCol)
+    {
+        disableCollision = enableCol;
     }
 }

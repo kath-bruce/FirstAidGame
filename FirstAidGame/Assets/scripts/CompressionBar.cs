@@ -64,5 +64,6 @@ public class CompressionBar : MonoBehaviour
     public void PauseBar(bool pause)
     {
         barPaused = pause;
+        FindObjectOfType<BarCollision>().EnableCollision(pause);
     }
 }
