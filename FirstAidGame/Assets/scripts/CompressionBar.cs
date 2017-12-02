@@ -11,13 +11,12 @@ public class CompressionBar : MonoBehaviour
     bool barPaused = false;
     const float timeBetweenDots = 0.6f;
     float timeLeftBetweenDots = 0.0f;
-
+    
     // Update is called once per frame
     void Update()
     {
-        if (!barPaused)
+        if (!barPaused && FindObjectOfType<Tutorial>().IsTutorialFinished())
         {
-
             timeLeftBetweenDots -= Time.deltaTime;
 
             if (timeLeftBetweenDots <= 0.0f)
@@ -42,15 +41,8 @@ public class CompressionBar : MonoBehaviour
                     && !screenRect.Contains(dotCorners[2]) && !screenRect.Contains(dotCorners[3])
                     && dotVec.x < 0)
                 {
-                    //Debug.LogError("DOT removed");
-
-                    //Vector3 dotPos = compressionDots[i].GetComponent<RectTransform>().position;
-                    //dotPos.x = respawnDot.position.x;
-
-                    //compressionDots[i].GetComponent<RectTransform>().position = dotPos;
                     Destroy(compressionDots[i]);
                     compressionDots.RemoveAt(i);
-                    //start countdown
                 }
             }
         }

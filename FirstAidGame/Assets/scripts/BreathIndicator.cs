@@ -5,7 +5,6 @@ using UnityEngine;
 public class BreathIndicator : MonoBehaviour {
 
     int breathCount = 0;
-    //int currentBreathCount = 0;
 
 	// Update is called once per frame
 	void Update () {
