@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+//using SimpleJSON;
 
 public class BarCollision : MonoBehaviour
 {
+    //public MenuController gameController;
     public Text collisionIndicator;
     public Text compCountDisplay;
     public Text scoreDisplay;
@@ -22,7 +24,7 @@ public class BarCollision : MonoBehaviour
     float timeLeft = time;
     
     bool countdownStarted = false;
-    bool disableCollision = false;
+    bool enableCollision = false;
 
     List<GameObject> dots = new List<GameObject>();
 
@@ -32,11 +34,38 @@ public class BarCollision : MonoBehaviour
         CompressionBar compBar = FindObjectOfType<CompressionBar>();
         dots = compBar.GetDots();
         heartbeatSrc = GetComponent<AudioSource>();
+        sirensSrc.clip = sirens;
     }
+
+    //void GreatHit()
+    //{
+    //    JSONNode vals = JSON.Parse("{\"great\" : \"" + "add_score" + "\" }");
+    //    // ask EngAGe to assess the action based on the config file
+    //    StartCoroutine(EngAGe.E.assess("compression_greatHit", vals, gameController.ActionAssessed));
+    //}
+    //void PerfectHit()
+    //{
+    //    JSONNode vals = JSON.Parse("{\"perfect\" : \"" + "add_score" + "\" }");
+    //    // ask EngAGe to assess the action based on the config file
+    //    StartCoroutine(EngAGe.E.assess("compression_perfectHit", vals, gameController.ActionAssessed));
+    //}
+    //void GoodHit()
+    //{
+    //    JSONNode vals = JSON.Parse("{\"good\" : \"" + "add_score" + "\" }");
+    //    // ask EngAGe to assess the action based on the config file
+    //    StartCoroutine(EngAGe.E.assess("compression_goodHit", vals, gameController.ActionAssessed));
+    //}
+    //void BadHit()
+    //{
+    //    JSONNode vals = JSON.Parse("{\"bad\" : \"" + "add_score" + "\" }");
+    //    // ask EngAGe to assess the action based on the config file
+    //    StartCoroutine(EngAGe.E.assess("compression_badHit", vals, gameController.ActionAssessed));
+    //}
 
     // Update is called once per frame
     void Update()
     {
+
         if (FindObjectOfType<Tutorial>().IsTutorialFinished())
         {
             Color colIndColour = collisionIndicator.color;
@@ -51,15 +80,23 @@ public class BarCollision : MonoBehaviour
             {
                 //pause bar
                 FindObjectOfType<CompressionBar>().PauseBar(true);
+                //FindObjectOfType<CompressionBar>().StartStopBar(false);
+
+                enableCollision = false;
 
                 //set score
-                gameComplete.text = "AMBULANCE HAS ARRIVED Score: " + score;
+                //if (gameController.GetIfOffline() == true)
+                    gameComplete.text = "AMBULANCE HAS ARRIVED! Score: " + score.ToString();
+                //else {
+                    //gameComplete.text = "AMBULANCE HAS ARRIVED! " + scoreDisplay.text.ToString();
+                    //StartCoroutine(EngAGe.E.endGameplay(true));
+                //}
 
                 //enable game complete text
                 gameComplete.gameObject.SetActive(true);
             }
 
-            timeLeftDisplay.text = "Time til ambulance:" + timeLeft.ToString("0.0") + "secs";
+            timeLeftDisplay.text = "Time til ambulance:" + timeLeft.ToString("0.0") + " secs";
             Color newR = Color.black;
 
             if (timeLeft > 10.0f)
@@ -69,12 +106,11 @@ public class BarCollision : MonoBehaviour
             }
             else
             {
-                newR.r = Mathf.Sin(((time - timeLeft) / time) * Mathf.PI * 30.0f) + 0.5f;
+                newR.r = Mathf.Sin(((time - timeLeft) / time) * Mathf.PI * 50.0f) + 0.5f;
                 timeLeftDisplay.color = newR;
 
                 if (!sirensSrc.isPlaying && sirensSrc.loop)
                 {
-                    sirensSrc.clip = sirens;
                     sirensSrc.loop = false;
                     sirensSrc.Play();
                 }
@@ -106,15 +142,16 @@ public class BarCollision : MonoBehaviour
                 if (barRect.Overlaps(dotRect) && !countdownStarted)
                 {
                     countdownStarted = true;
+                    enableCollision = true;
                 }
 
                 if (!barRect.Overlaps(dotRect) && Input.GetKeyDown(KeyCode.Space)
-                    && countdownStarted && !disableCollision)
+                    && countdownStarted && enableCollision)
                 {
                     misses.Add(true);
                 }
                 else if (barRect.Overlaps(dotRect) && Input.GetKeyDown(KeyCode.Space)
-                    && countdownStarted && !disableCollision)
+                    && countdownStarted && enableCollision)
                 {
                     float percentage = Mathf.Abs(((dotRect.xMin - barRect.xMax) / dotRect.width) * 100.0f);
 
@@ -124,7 +161,11 @@ public class BarCollision : MonoBehaviour
                         colIndColour = Color.blue;
                         colIndColour.a = 1.0f;
                         compCount++;
-                        score += 5;
+                        //if(gameController.GetIfOffline() == true)
+                            score += 5;
+                        //else
+                            //GreatHit();
+                        
 
                         if (!heartbeatSrc.isPlaying)
                         {
@@ -139,7 +180,10 @@ public class BarCollision : MonoBehaviour
                         colIndColour = Color.green;
                         colIndColour.a = 1.0f;
                         compCount++;
-                        score += 10;
+                        //if (gameController.GetIfOffline() == true)
+                            score += 10;
+                        //else
+                            //PerfectHit();
 
                         if (!heartbeatSrc.isPlaying)
                         {
@@ -154,7 +198,10 @@ public class BarCollision : MonoBehaviour
                         colIndColour = Color.magenta;
                         colIndColour.a = 1.0f;
                         compCount++;
-                        score += 2;
+                        //if (gameController.GetIfOffline() == true)
+                            score += 2;
+                        //else
+                            //GoodHit();
 
                         if (!heartbeatSrc.isPlaying)
                         {
@@ -176,13 +223,17 @@ public class BarCollision : MonoBehaviour
                 colIndColour = Color.red;
                 colIndColour.a = 1.0f;
                 compCount++;
-                score--;
+                //if (gameController.GetIfOffline() == true)
+                    score --;
+                //else
+                    //BadHit();
             }
 
             collisionIndicator.color = colIndColour;
             compCountDisplay.text = "Compressions:" + compCount;
 
-            scoreDisplay.text = "Score:" + score;
+            //if (gameController.GetIfOffline() == true)
+                scoreDisplay.text = "Score:" + score;
 
             if (compCount == 30)
             {
@@ -190,6 +241,8 @@ public class BarCollision : MonoBehaviour
 
                 //pause bar
                 FindObjectOfType<CompressionBar>().PauseBar(true);
+
+                enableCollision = false;
 
                 //enable indicator
                 breathIndicator.SetActive(true);
@@ -205,6 +258,33 @@ public class BarCollision : MonoBehaviour
 
     public void EnableCollision(bool enableCol)
     {
-        disableCollision = enableCol;
+        enableCollision = enableCol;
+    }
+
+    public void RestartGame()
+    {
+        FindObjectOfType<Tutorial>().RestartTutorial();
+        FindObjectOfType<CompressionBar>().RestartBar();
+        breathIndicator.SetActive(false);
+        collisionIndicator.color = Color.clear;
+        compCount = 0;
+        compCountDisplay.color = Color.black;
+        compCountDisplay.text = "Compressions:" + compCount;
+        score = 0;
+        scoreDisplay.text = "Score:" + score;
+        timeLeft = time;
+        timeLeftDisplay.color = Color.black;
+        timeLeftDisplay.text = "Time til ambulance:" + timeLeft.ToString("0.0") + " secs";
+        gameComplete.gameObject.SetActive(false);
+        enableCollision = false;
+        countdownStarted = false;
+        StopMusic();
+    }
+
+    public void StopMusic()
+    {
+        sirensSrc.Stop();
+        sirensSrc.loop = true;
+        heartbeatSrc.Stop();
     }
 }

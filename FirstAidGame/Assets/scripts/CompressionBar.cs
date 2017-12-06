@@ -9,13 +9,14 @@ public class CompressionBar : MonoBehaviour
     public RectTransform respawnDot;
 
     bool barPaused = false;
+    bool barStarted = false;
     const float timeBetweenDots = 0.6f;
     float timeLeftBetweenDots = 0.0f;
     
     // Update is called once per frame
     void Update()
     {
-        if (!barPaused && FindObjectOfType<Tutorial>().IsTutorialFinished())
+        if (FindObjectOfType<Tutorial>().IsTutorialFinished() && !barPaused && barStarted)
         {
             timeLeftBetweenDots -= Time.deltaTime;
 
@@ -56,6 +57,25 @@ public class CompressionBar : MonoBehaviour
     public void PauseBar(bool pause)
     {
         barPaused = pause;
-        FindObjectOfType<BarCollision>().EnableCollision(pause);
+    }
+
+    public void StartStopBar(bool start)
+    {
+        barStarted = start;
+    }
+
+    public void RestartBar()
+    {
+        foreach (GameObject dot in compressionDots)
+        {
+            Destroy(dot);
+        }
+
+        compressionDots.Clear();
+
+        timeLeftBetweenDots = 0.0f;
+
+        barPaused = false;
+        barStarted = false;
     }
 }

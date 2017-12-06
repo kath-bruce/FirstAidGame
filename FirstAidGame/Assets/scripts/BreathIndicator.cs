@@ -19,6 +19,8 @@ public class BreathIndicator : MonoBehaviour {
                 //unpause bar
                 FindObjectOfType<CompressionBar>().PauseBar(false);
 
+                FindObjectOfType<BarCollision>().EnableCollision(true);
+
                 //reset compression count
                 FindObjectOfType<BarCollision>().ResetCompCount();
 

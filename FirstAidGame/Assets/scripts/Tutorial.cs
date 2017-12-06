@@ -51,6 +51,8 @@ public class Tutorial : MonoBehaviour {
 
                 timeTut.gameObject.SetActive(false);
                 timeTutHighlight.gameObject.SetActive(false);
+
+                tutControls.gameObject.SetActive(true);
                 break;
 
             case TutorialPart.COMPCOUNT_TUT:
@@ -65,6 +67,8 @@ public class Tutorial : MonoBehaviour {
 
                 timeTut.gameObject.SetActive(false);
                 timeTutHighlight.gameObject.SetActive(false);
+
+                tutControls.gameObject.SetActive(true);
                 break;
 
             case TutorialPart.SCORE_TUT:
@@ -79,6 +83,8 @@ public class Tutorial : MonoBehaviour {
 
                 timeTut.gameObject.SetActive(false);
                 timeTutHighlight.gameObject.SetActive(false);
+
+                tutControls.gameObject.SetActive(true);
                 break;
 
             case TutorialPart.TIME_TUT:
@@ -93,6 +99,8 @@ public class Tutorial : MonoBehaviour {
 
                 timeTut.gameObject.SetActive(true);
                 timeTutHighlight.gameObject.SetActive(true);
+
+                tutControls.gameObject.SetActive(true);
                 break;
 
             case TutorialPart.FINISH_TUT:
@@ -109,14 +117,21 @@ public class Tutorial : MonoBehaviour {
                 timeTutHighlight.gameObject.SetActive(false);
 
                 tutControls.gameObject.SetActive(false);
-                tutControls.gameObject.SetActive(false);
                 break;
         }
 	}
 
     public bool IsTutorialFinished()
     {
-        return part == TutorialPart.FINISH_TUT;
+        if (part == TutorialPart.FINISH_TUT)
+        {
+            FindObjectOfType<CompressionBar>().StartStopBar(true);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public void RestartTutorial()
